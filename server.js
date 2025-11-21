@@ -1,11 +1,13 @@
 import express, { urlencoded } from 'express';
 import morgan from 'morgan';
 import mongoose from 'mongoose';
+import cors from 'cors';
 import 'dotenv/config'
 
 const app = express();
 
-app.use(morgan('dev'))
+app.use(morgan('dev'));
+app.use(cors());
 app.use(urlencoded())
 
 
@@ -19,6 +21,9 @@ const connect =  async()=>{
 }
 connect();
 
+app.get("/", (req,res)=>{
+    console.log("request hit this endpoint")
+})
 app.listen(3000, ()=>{
     console.log('Server running on port 3000!')
 })
