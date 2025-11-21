@@ -11,7 +11,7 @@ const app = express();
 // * Middleware
 app.use(morgan("dev"));
 app.use(cors());
-app.use(urlencoded())
+app.use(express.json())
 
 // * Routes 
 app.get("/", (req,res)=>{
