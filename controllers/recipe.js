@@ -1,9 +1,10 @@
 import express from 'express';
 import RECIPES from '../models/recipe.js';
+import isSignedIn from '../middleware/isSignedIn.js';
 const router = express.Router();
 
 // ? Create
-router.post("", async (req, res, next) => {
+router.post("", isSignedIn, async (req, res, next) => {
     try {
         // req.body.author = req.user._id
         const recipe = await RECIPES.create(req.body)
@@ -37,7 +38,7 @@ router.get("/:recipeId", async (req, res, next) => {
 })
 
 // ? Update
-router.put("/:recipeId", async (req, res, next) => {
+router.put("/:recipeId", isSignedIn, async (req, res, next) => {
     try {
         const { recipeId } = req.params
         const recipe = await RECIPES.findById(recipeId)
@@ -55,7 +56,7 @@ router.put("/:recipeId", async (req, res, next) => {
     }
 })
 
-router.delete("/:recipeId", async (req, res, next) => {
+router.delete("/:recipeId", isSignedIn, async (req, res, next) => {
     try {
         const { recipeId } = req.params
         const recipe = await RECIPES.findById(recipeId)
@@ -73,7 +74,7 @@ router.delete("/:recipeId", async (req, res, next) => {
         next()
     }
 })
-router.post("/:recipeId/comments", async (req, res, next) => {
+router.post("/:recipeId/comments", isSignedIn, async (req, res, next) => {
     try {
         const recipeId =  req.params.recipeId;
         const recipe = await RECIPES.findById(recipeId)
