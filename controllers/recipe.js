@@ -87,8 +87,6 @@ router.post("/:recipeId/comments", async (req, res) => {
         // await recipe.save();
         // res.status(201).json(recipe.comments[recipe.comments.length-1])
 
-router.post("/:recipeId/reviews", (req, res) => {
-
     } catch (error) {
         console.log(error)
         res.json(error);
