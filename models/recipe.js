@@ -17,6 +17,7 @@ const recipe = new mongoose.Schema({
     preparationTime: {type: Number},
     instructions: {type: [String], required: true},
     image: {type: String},
+    author: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
     comments: [comment]
 }, {timestamps: true});
 
