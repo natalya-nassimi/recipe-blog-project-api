@@ -6,7 +6,7 @@ const ingredient = {
     unit: {type: String, required: true, enum:['cup', 'gallon', 'gram', 'litre', 'kilogram', 'ounce', 'quart', 'tbsp']}
 }
 const comment = new mongoose.Schema({
-    commenter: {type: mongoose.Schema.Types.ObjectId, ref:"User", required: true},
+    author: {type: mongoose.Schema.Types.ObjectId, ref:"User", required: true},
     rating: {type: Number},
     description: {type: String, required: true},
 }, {timestamps: true}) 
