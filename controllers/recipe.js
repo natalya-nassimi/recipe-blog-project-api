@@ -84,7 +84,6 @@ router.post("/:recipeId/comments", isSignedIn, async (req, res, next) => {
         const recipe = await RECIPES.findById(recipeId)
         if(!recipe) throw new NotFound("Recipe not found")
         const comment = req.body;
-        console.log(comment);
         recipe.comments.push(comment)
 
         const updated_comment = recipe.comments[recipe.comments.length-1];
