@@ -1,6 +1,7 @@
 import express from 'express';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
+import { Unauthorised, Forbidden, NotFound } from '../utils/errors.js';
 
 // * Model 
 import USER from '../models/user.js';
@@ -14,7 +15,7 @@ router.post("/sign-up",async(req,res, next)=>{
         const user = await USER.create(req.body);
         res.status(201).json(user)
     } catch (error) {
-        next();
+        next(error);
     }
 })
 
@@ -23,11 +24,11 @@ router.post("/sign-in", async (req,res, next)=>{
         const {username, password} =  req.body;
         const user =  await USER.findOne({username: username});
         if(!user){
-            throw new Error("Username not Found");
+            throw new Unauthorised('Username not Found');
         }
         console.log(bcrypt.compareSync(password, user.password))
         if(!bcrypt.compareSync(password, user.password)){
-            throw new Error("Incorrect Password");
+            throw new Unauthorised('Password is incorrect');
         }
 
         const token = jwt.sign(

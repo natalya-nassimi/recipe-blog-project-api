@@ -18,7 +18,7 @@ const errorHandler =  (error, req, res, next)=>{
         const errors =  Object.entries(error.keyValue);
         errors.forEach(error => {
             const [fieldName, value] =  error
-            errorResponse[fieldName] =  `${fieldName} "${value}" already taken.`
+            errorResponse[fieldName] =  `${fieldName} ${value} already taken.`
         })   
         res.status(400).json(errorResponse);
     }
@@ -28,7 +28,7 @@ const errorHandler =  (error, req, res, next)=>{
     }
     
     if(error.name=== 'ValidationError'){
-        const errorObjects =  Object.value(error.errors)
+        const errorObjects =  Object.values(error.errors)
         console.log(errorObjects)
 
         errorObjects.forEach(error => {

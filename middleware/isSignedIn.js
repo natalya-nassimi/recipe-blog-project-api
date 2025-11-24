@@ -1,10 +1,11 @@
 import jwt from 'jsonwebtoken'
 import User from '../models/user.js'
+import { Unauthorised } from '../utils/errors.js'
 
 const isSignedIn = async (req, res, next) => {
     try {
         const authHeader = req.headers.authorization
-        if(!authHeader) throw new Error('no header found')
+        if(!authHeader) throw new Unauthorised('Unauthorised')
 
         const token = authHeader.split(' ')[1]
 
@@ -12,14 +13,13 @@ const isSignedIn = async (req, res, next) => {
 
         const user = await User.findById(payload.user._id)
 
-        if(!user) throw new Error('user not found')
+        if(!user) throw new Unauthorised('User not found')
         
         req.user = user
         next()
 
     } catch (error) {
-        console.log(error.message)
-        return res.status(401).json({ message: 'Unauthorised' })
+        next(error)
     }
 }
 
