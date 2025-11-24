@@ -10,7 +10,7 @@ router.post("", isSignedIn, async (req, res, next) => {
         req.body.author = req.user._id
         const recipe = await RECIPES.create(req.body)
         res.status(201).json(recipe)
-        // res.json({message: 'You are authorised', user: req.user})
+        
     } catch (error) {
         next(error)
     }
@@ -46,9 +46,9 @@ router.put("/:recipeId", isSignedIn, async (req, res, next) => {
         const recipe = await RECIPES.findById(recipeId)
         if (!recipe) throw new NotFound('Recipe not found')
 
-        // add in when user is defined
-        // if(!recipe.author.equals(req.user._id)) {
-        // throw new Error('No permission to access') }
+        if(!recipe.author.equals(req.user._id)) {
+            throw new Forbidden('No permission to access') 
+        }
 
         const updatedRecipe = await RECIPES.findByIdAndUpdate(recipeId, req.body, { returnDocument: 'after' })
         res.json(updatedRecipe)
@@ -65,10 +65,9 @@ router.delete("/:recipeId", isSignedIn, async (req, res, next) => {
         const recipe = await RECIPES.findById(recipeId)
         if (!recipe) throw new NotFound('Recipe not found')
         
-        // add in when user is defined
-        // if(!recipe.author.equals(req.user._id)) {
-        //    throw new Error('No permission to access')
-        // }
+        if(!recipe.author.equals(req.user._id)) {
+            throw new Forbidden('No permission to access')
+        }
 
         await RECIPES.findByIdAndDelete(recipeId)
         res.json({message: 'Recipe deleted successfully'})
