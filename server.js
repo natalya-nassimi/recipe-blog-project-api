@@ -6,6 +6,7 @@ import 'dotenv/config';
 // * Routers / Controllers
 import authRouter from './controllers/auth.js';
 import recipeRouter from './controllers/recipe.js'
+import errorHandler from './middleware/errorHandler.js';
 
 const app = express();
 // * Middleware
@@ -20,6 +21,7 @@ app.get("/", (req,res)=>{
 app.use("/auth", authRouter);
 app.use("/recipes", recipeRouter);
 
+app.use(errorHandler)
 // * Connection
 const connect =  async()=>{
     try {
