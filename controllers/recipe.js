@@ -73,9 +73,26 @@ router.delete("/:recipeId", async (req, res) => {
         console.log(error)
     }
 })
+router.post("/:recipeId/comments", async (req, res) => {
+    try {
+        const recipeId =  req.params.recipeId;
+        const recipe = await RECIPES.findById(recipeId);
+        if(!recipe) throw new Error("Recipe not found")
+        const comment = req.body;
+        recipe.comments.push(comment)
+
+        // const updated_comment = recipe.comments[recipe.comments.length-1];
+        // updated_comment.author = req.user._id;
+
+        // await recipe.save();
+        // res.status(201).json(recipe.comments[recipe.comments.length-1])
 
 router.post("/:recipeId/reviews", (req, res) => {
 
+    } catch (error) {
+        console.log(error)
+        res.json(error);
+    }
 })
 
 export default router;
