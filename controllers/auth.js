@@ -1,24 +1,24 @@
 import express from 'express';
 import bcrypt from 'bcrypt';
-import jwt from 'jsonwebtoken'
+import jwt from 'jsonwebtoken';
+
 // * Model 
 import USER from '../models/user.js';
 
 const router = express.Router();
 
 //* Routes
-router.post("/sign-up",async(req,res)=>{
+router.post("/sign-up",async(req,res, next)=>{
     console.log(req.body);
     try {
         const user = await USER.create(req.body);
         res.status(201).json(user)
     } catch (error) {
-        console.log(error)
-        res.json(error)
+        next();
     }
 })
 
-router.post("/sign-in", async (req,res)=>{
+router.post("/sign-in", async (req,res, next)=>{
     try {
         const {username, password} =  req.body;
         const user =  await USER.findOne({username: username});
@@ -43,8 +43,7 @@ router.post("/sign-in", async (req,res)=>{
         
         res.json(token);
     } catch (error) {
-        console.log(error)
-        res.json(error);
+        next(error)
     }
 })
 export default router;
