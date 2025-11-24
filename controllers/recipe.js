@@ -6,9 +6,10 @@ const router = express.Router();
 // ? Create
 router.post("", isSignedIn, async (req, res, next) => {
     try {
-        // req.body.author = req.user._id
+        req.body.author = req.user._id
         const recipe = await RECIPES.create(req.body)
         res.status(201).json(recipe)
+        res.json({message: 'You are authorised', user: req.user})
     } catch (error) {
         next()
     }
