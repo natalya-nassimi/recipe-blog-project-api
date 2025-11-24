@@ -3,41 +3,41 @@ import RECIPES from '../models/recipe.js';
 const router = express.Router();
 
 // ? Create
-router.post("", async (req, res) => {
+router.post("", async (req, res, next) => {
     try {
         // req.body.author = req.user._id
         const recipe = await RECIPES.create(req.body)
         res.status(201).json(recipe)
     } catch (error) {
-        console.log(error)
+        next()
     }
 });
 
 // ? Index
-router.get("", async (req, res) => {
+router.get("", async (req, res, next) => {
     try {
         const recipes = await RECIPES.find().populate('author')
         res.json(recipes)
     } catch (error) {
-        console.log(error)
+        next()
     }
 
 });
 
 //? Show Page
-router.get("/:recipeId", async (req, res) => {
+router.get("/:recipeId", async (req, res, next) => {
     try {
         const { recipeId } = req.params
         const recipe = await RECIPES.findById(recipeId).populate(['author', 'comments.commenter'])
         if (!recipe) throw new Error('Recipe not found')
         res.json(recipe)
     } catch (error) {
-        console.log(error)
+        next()
     }
 })
 
 // ? Update
-router.put("/:recipeId", async (req, res) => {
+router.put("/:recipeId", async (req, res, next) => {
     try {
         const { recipeId } = req.params
         const recipe = await RECIPES.findById(recipeId)
@@ -51,11 +51,11 @@ router.put("/:recipeId", async (req, res) => {
         res.json(updatedRecipe)
 
     } catch (error) {
-        console.log(error)
+        next()
     }
 })
 
-router.delete("/:recipeId", async (req, res) => {
+router.delete("/:recipeId", async (req, res, next) => {
     try {
         const { recipeId } = req.params
         const recipe = await RECIPES.findById(recipeId)
@@ -70,13 +70,13 @@ router.delete("/:recipeId", async (req, res) => {
         res.json({message: 'Recipe deleted successfully'})
 
     } catch (error) {
-        console.log(error)
+        next()
     }
 })
-router.post("/:recipeId/comments", async (req, res) => {
+router.post("/:recipeId/comments", async (req, res, next) => {
     try {
         const recipeId =  req.params.recipeId;
-        const recipe = await RECIPES.findById(recipeId);
+        const recipe = await RECIPES.findById(recipeId)
         if(!recipe) throw new Error("Recipe not found")
         const comment = req.body;
         recipe.comments.push(comment)
@@ -88,8 +88,7 @@ router.post("/:recipeId/comments", async (req, res) => {
         // res.status(201).json(recipe.comments[recipe.comments.length-1])
 
     } catch (error) {
-        console.log(error)
-        res.json(error);
+        next()
     }
 })
 
