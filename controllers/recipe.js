@@ -55,9 +55,25 @@ router.put("/:recipeId", async (req, res) => {
     }
 })
 
-router.delete("/recipeId", (req, res) => {
+router.delete("/:recipeId", async (req, res) => {
+    try {
+        const { recipeId } = req.params
+        const recipe = await RECIPES.findById(recipeId)
+        if (!recipe) throw new Error('recipe not found')
+        
+        // add in when user is defined
+        // if(!recipe.author.equals(req.user._id)) {
+        //    throw new Error('No permission to access')
+        // }
 
+        await RECIPES.findByIdAndDelete(recipeId)
+        res.json({message: 'Recipe deleted successfully'})
+
+    } catch (error) {
+        console.log(error)
+    }
 })
+
 router.post("/:recipeId/reviews", (req, res) => {
 
 })
