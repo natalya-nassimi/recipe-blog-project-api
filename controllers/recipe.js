@@ -1,13 +1,16 @@
 import express from 'express';
 import RECIPES from '../models/recipe.js';
+import isSignedIn from '../middleware/isSignedIn.js';
+
 const router = express.Router();
 
 // ? Create
-router.post("", async (req, res) => {
+router.post("", isSignedIn, async (req, res) => {
     try {
-        // req.body.author = req.user._id
+        req.body.author = req.user._id
         const recipe = await RECIPES.create(req.body)
         res.status(201).json(recipe)
+        res.json({message: 'You are authorised', user: req.user})
     } catch (error) {
         console.log(error)
     }
@@ -37,7 +40,7 @@ router.get("/:recipeId", async (req, res) => {
 })
 
 // ? Update
-router.put("/:recipeId", async (req, res) => {
+router.put("/:recipeId", isSignedIn, async (req, res) => {
     try {
         const { recipeId } = req.params
         const recipe = await RECIPES.findById(recipeId)
@@ -55,7 +58,8 @@ router.put("/:recipeId", async (req, res) => {
     }
 })
 
-router.delete("/:recipeId", async (req, res) => {
+// ? Delete
+router.delete("/:recipeId", isSignedIn, async (req, res) => {
     try {
         const { recipeId } = req.params
         const recipe = await RECIPES.findById(recipeId)
@@ -73,7 +77,9 @@ router.delete("/:recipeId", async (req, res) => {
         console.log(error)
     }
 })
-router.post("/:recipeId/comments", async (req, res) => {
+
+// ? Create Comment
+router.post("/:recipeId/comments", isSignedIn, async (req, res) => {
     try {
         const recipeId =  req.params.recipeId;
         const recipe = await RECIPES.findById(recipeId);
