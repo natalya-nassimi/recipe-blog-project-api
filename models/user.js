@@ -22,7 +22,7 @@ user.virtual("confirmPassword").set(function(passwordValue){
 
 //ensure the password and confirmPassword match
 user.pre("validate", function(next){
-    if(this.isModified("password") && this._confirmPassword != this.password){x
+    if(this.isModified("password") && this._confirmPassword != this.password){
         this.invalidate("confirmPassword", "Passwords do not match");
     }
     next();
