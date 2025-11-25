@@ -31,7 +31,7 @@ router.get("", async (req, res, next) => {
 router.get("/:recipeId", async (req, res, next) => {
     try {
         const { recipeId } = req.params
-        const recipe = await RECIPES.findById(recipeId).populate(['author', 'comments.commenter'])
+        const recipe = await RECIPES.findById(recipeId).populate(['author', 'comments.author'])
         if (!recipe) throw new NotFound('Recipe not found')
         res.json(recipe)
     } catch (error) {

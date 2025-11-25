@@ -7,7 +7,14 @@ const user = new mongoose.Schema({
     email: {type: String, required: true, unique: true},
     password:{type: String, required: true},
     isAdmin:{type: Boolean, default: false}
-})
+}, {
+    toJSON: {
+        transform: (doc, ret)=>{
+            delete ret.password
+            delete ret.isAdmin
+            return ret
+        }
+}})
 // retrieving data from confirmPassword field
 user.virtual("confirmPassword").set(function(passwordValue){
     this._confirmPassword =  passwordValue;
@@ -15,7 +22,7 @@ user.virtual("confirmPassword").set(function(passwordValue){
 
 //ensure the password and confirmPassword match
 user.pre("validate", function(next){
-    if(this.isModified("password") && this._confirmPassword != this.password){
+    if(this.isModified("password") && this._confirmPassword != this.password){x
         this.invalidate("confirmPassword", "Passwords do not match");
     }
     next();
