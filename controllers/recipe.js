@@ -1,5 +1,6 @@
 import express from 'express';
 import RECIPES from '../models/recipe.js';
+import USER from '../models/user.js';
 import isSignedIn from '../middleware/isSignedIn.js';
 import { Unauthorised, Forbidden, NotFound } from '../utils/errors.js';
 const router = express.Router();
@@ -87,7 +88,7 @@ router.post("/:recipeId/comments", isSignedIn, async (req, res, next) => {
         recipe.comments.push(comment)
 
         const updated_comment = recipe.comments[recipe.comments.length-1];
-        updated_comment.author = req.user._id;
+        updated_comment.author = await USER.findById(req.user._id);
 
         await recipe.save();
         res.status(201).json(recipe.comments[recipe.comments.length-1])
