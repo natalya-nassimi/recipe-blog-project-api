@@ -11,7 +11,7 @@ router.post("", isSignedIn, async (req, res, next) => {
         req.body.author = req.user._id
         const recipe = await RECIPES.create(req.body)
         res.status(201).json(recipe)
-        
+
     } catch (error) {
         next(error)
     }
@@ -47,8 +47,8 @@ router.put("/:recipeId", isSignedIn, async (req, res, next) => {
         const recipe = await RECIPES.findById(recipeId)
         if (!recipe) throw new NotFound('Recipe not found')
 
-        if(!recipe.author.equals(req.user._id)) {
-            throw new Forbidden('No permission to access') 
+        if (!recipe.author.equals(req.user._id)) {
+            throw new Forbidden('No permission to access')
         }
 
         const updatedRecipe = await RECIPES.findByIdAndUpdate(recipeId, req.body, { returnDocument: 'after' })
@@ -65,13 +65,13 @@ router.delete("/:recipeId", isSignedIn, async (req, res, next) => {
         const { recipeId } = req.params
         const recipe = await RECIPES.findById(recipeId)
         if (!recipe) throw new NotFound('Recipe not found')
-        
-        if(!recipe.author.equals(req.user._id)) {
+
+        if (!recipe.author.equals(req.user._id)) {
             throw new Forbidden('No permission to access')
         }
 
         await RECIPES.findByIdAndDelete(recipeId)
-        res.json({message: 'Recipe deleted successfully'})
+        res.json({ message: 'Recipe deleted successfully' })
 
     } catch (error) {
         next(error)
@@ -81,17 +81,17 @@ router.delete("/:recipeId", isSignedIn, async (req, res, next) => {
 // ? Comment Create
 router.post("/:recipeId/comments", isSignedIn, async (req, res, next) => {
     try {
-        const recipeId =  req.params.recipeId;
+        const recipeId = req.params.recipeId;
         const recipe = await RECIPES.findById(recipeId)
-        if(!recipe) throw new NotFound("Recipe not found")
+        if (!recipe) throw new NotFound("Recipe not found")
         const comment = req.body;
         recipe.comments.push(comment)
 
-        const updated_comment = recipe.comments[recipe.comments.length-1];
+        const updated_comment = recipe.comments[recipe.comments.length - 1];
         updated_comment.author = await USER.findById(req.user._id);
 
         await recipe.save();
-        res.status(201).json(recipe.comments[recipe.comments.length-1])
+        res.status(201).json(recipe.comments[recipe.comments.length - 1])
 
     } catch (error) {
         next(error)
