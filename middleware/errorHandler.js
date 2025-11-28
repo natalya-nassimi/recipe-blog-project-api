@@ -20,11 +20,11 @@ const errorHandler =  (error, req, res, next)=>{
             const [fieldName, value] =  error
             errorResponse[fieldName] =  `${fieldName} ${value} already taken.`
         })   
-        res.status(400).json(errorResponse);
+        return res.status(400).json(errorResponse);
     }
 
     if(error.name === 'CastError' && error.kind === 'ObjectId'){
-        res.status(404).json({message: 'Not found'})
+        return res.status(404).json({message: 'Not found'})
     }
     
     if(error.name=== 'ValidationError'){
